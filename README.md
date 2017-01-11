@@ -1,11 +1,13 @@
 # Sentiment Analysis in Twitter
-Summary
+### Summary
 This will be a rerun of SemEval-2016 Task 4 with several changes:
-new subtasks: another language and user information
-new evaluation measures
-new training datasets
-new test datasets
-I. Introduction
+new subtasks: 
+- another language and user information
+- new evaluation measures
+- new training datasets
+- new test datasets
+
+### I. Introduction
 The recent rise of social media has greatly democratized content creation. Facebook, Twitter, Skype, Whatsapp and LiveJournal are now commonly used to share thoughts and opinions about anything in the surrounding world. This proliferation of social media content has created new opportunities to study public opinion, with Twitter being especially popular for research due to its scale, representativeness, variety of topics discussed, as well as ease of public access to content.
           Unfortunately, research in that direction was hindered by the unavailability of suitable datasets and lexicons for system training, development and testing. While some Twitter-specific resources were developed, initially they were either small and proprietary, such as the i-sieve corpus (Kouloumpis et al., 2011), were created only for specific languages (e.g., Villena-Roman et al., 2013), or relied on noisy labels obtained automatically (Mohammad, 2012; Pang et al., 2002).
           This situation changed with the shared task on Sentiment Analysis on Twitter, part of the International Workshop on Semantic Evaluation (SemEval), a semantic evaluation forum previously known as SensEval. The task ran in 2013, 2014, 2015 and 2016, attracting over 40+ participating teams in all four editions. While the focus was on general tweets, the task also featured out-of-domain testing on SMS messages, LiveJournal messages, as well as on sarcastic tweets. SemEval-2013 Task 2 (Nakov et al., 2013) and SemEval-2014 Task 9 (Rosenthal et al., 2014) had an expression-level and a message-level polarity subtasks. SemEval-2015 Task 10 (Rosenthal et al., 2015; Nakov et al., 2016b) further added subtasks on topic-based message polarity classification, on detecting trends towards a topic, and on determining the out-of-context (a priori) strength of association of terms with positive sentiment. SemEval-2016 Task 4 (Nakov et al., 2016a) dropped the phrase-level subtask and the strength of association subtask, and focused on sentiment with respect to a topic. It further introduced a 5-point scale, which is used for human review ratings on popular websites such as Amazon, TripAdvisor, Yelp, etc.; from a research perspective, this meant moving from classification to ordinal regression. Moreover, it also focused on quantification, i.e., determining what proportion of a set of tweets on a given topic are positive/negative about it. It also featured a 5-point scale ordinal quantification subtask (Gao and Sebastiani, 2015).
@@ -14,25 +16,25 @@ There has been emerging work in sentiment analysis for Arabic, especially as mor
 We expect the quest for more interesting formulations of the general sentiment analysis task to continue. We see SemEval as the engine of this innovation, as it not only does head-to-head comparisons, but also creates databases and tools that enable follow-up research for many years afterwards.
 The proposed new edition of the task reiterates the new tasks from 2016, and offers two new directions: (i) adding a new language, Arabic, and (ii) adding information about the Twitter users. Moreover, we will add new evaluation measures, new training datasets and new test datasets.
 
-II. Subtasks
-Subtask A. (rerun): Message Polarity Classification: Given a message, classify whether the message is of positive, negative, or neutral sentiment.
-Subtasks B-C. (rerun): Topic-Based Message Polarity Classification:
+### II. Subtasks
+***Subtask A.*** (rerun): Message Polarity Classification: Given a message, classify whether the message is of positive, negative, or neutral sentiment.
+***Subtasks B-C.*** (rerun): Topic-Based Message Polarity Classification:
 Given a message and a topic, classify the message on
-B) two-point scale: positive or negative sentiment towards that topic
-C) five-point scale: sentiment conveyed by that tweet towards the topic on a five-point scale.
-Subtasks D-E. (rerun): Tweet quantification:
+***B)*** two-point scale: positive or negative sentiment towards that topic
+***C)*** five-point scale: sentiment conveyed by that tweet towards the topic on a five-point scale.
+***Subtasks D-E.*** (rerun): Tweet quantification:
 Given a set of tweets about a given topic, estimate the distribution of the tweets across
-D) two-point scale: the “Positive” and “Negative” classes
-E) five-point scale: the five classes of a five-point scale.
-I. (new) Polarity classification in another language: In addition to performing subtasks A-E in English, we will also perform multilingual experiments by providing a run of these tasks using a test set containing tweets in Arabic.
-II. (new) User Information: We aim to harness the user profile information provided in Twitter such as demographics (e.g., age, location) as well as the social network. We would like to analyze its impact on improving sentiment analysis.
-III. Data
+***D)*** two-point scale: the “Positive” and “Negative” classes
+***E)*** five-point scale: the five classes of a five-point scale.
+***I.*** (new) Polarity classification in another language: In addition to performing subtasks A-E in English, we will also perform multilingual experiments by providing a run of these tasks using a test set containing tweets in Arabic.
+***II.*** (new) User Information: We aim to harness the user profile information provided in Twitter such as demographics (e.g., age, location) as well as the social network. We would like to analyze its impact on improving sentiment analysis.
+***III.*** Data
     From SemEval-2016 Task 4, we already have datasets with Twitter messages on a range of topics, including a mixture of entities (e.g., Gadafi, Steve Jobs), products (e.g., kindle, android phone), and events (e.g., Japan earthquake, NHL playoffs).
           These preexisting datasets will be made available for training, tuning and dev-testing the systems for the task reruns; they would be also allowed to be used for the new subtasks, if participants think they can make use of them in addition to new datasets that we are going to prepare.
     We will do annotations using CrowdFlower or Mechanical Turk (most likely the former). We already have experience with both in previous years. We have secured funding to pay for the annotations: about 2000 new test tweets per English subtask + 8000-10000 new tweets for the Arabic data.
           In addition to providing data, this year we will provide scripts that can be used to download user profile information, such as age, and location, as well as friend lists. This information can be used for the new addition to all tasks that is described in the summary as “II. (new) User Information”.
 
-IV. Evaluation
+### IV. Evaluation
    
 The metric for evaluating the participating systems will be as follows:
 For Subtask A we will replace the measure used in 2016 (F1 averaged across the positives and the negatives) with macroaveraged recall (recall averaged across the three classes), since the latter has better theoretical properties than the former (Sebastiani, 2015), and since this provides better consistency with Subtask B
@@ -43,15 +45,18 @@ For Subtask E, the only measure we will consider, consistently with 2016, will b
   Each participating team will initially have access to the training data only.  Later, the unlabelled test data will be released.  After SemEval-2017, the labels for the test data will be released as well. We will ask the participants to submit their predictions, and the organizers will calculate the results for each participant. We will make no distinction between constrained and unconstrained systems, but the participants will be asked to report what additional resources they have used for each submitted run.
    
 
-V. Baselines, scorers, format checkers
+### V. Baselines, scorers, format checkers
+
     As in previous years, we will provide scorers, format checkers and simple baselines. Some of these are readily available, e.g., for the task reruns.
 
-VII. Organizers
+### VII. Organizers
+
 Noura Farra        (noura@cs.columbia.edu)    Columbia University
 Preslav Nakov        (pnakov@qf.org.qa)        Qatar Computing Research Institute
 Sara Rosenthal        (srosenthal@us.ibm.com)    IBM Watson Health Research
  
-VIII. References
+### VIII. References
+
 Muhammad Abdul-Mageed, Mona T. Diab, and Mohammed Korayem. Subjectivity and sentiment analysis of modern standard arabic. In Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies: short papers-Volume 2., Association for Computational Linguistics, 2011.
 Muhammad Abdul-Mageed, Mona Diab, and Sandra Kübler. SAMAR: Subjectivity and sentiment analysis for Arabic social media. In Computer Speech & Language 28.1, pp. 20-37, 2014.
 Mohammad Al-Smadi,  Omar Qawasmeh, Bashar Talafha, and Muhannad Quwaide. Human annotated arabic dataset of book reviews for aspect based sentiment analysis. Future Internet of Things and Cloud (FiCloud), 2015 3rd International Conference on. IEEE, 2015.
