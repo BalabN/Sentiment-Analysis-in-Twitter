@@ -5,6 +5,9 @@ import pandas as pd
 import numpy as np
 
 # Prepare text
+from Tweet import Tweet
+
+
 def getTokens():
    with open('shakespeare.txt', 'r') as shakes:
     text = shakes.read().lower()
@@ -24,6 +27,9 @@ def get_negAndpos(matrix):
 
 x = pd.read_csv('train-A.tsv', sep='\t')
 matrix_train = x.as_matrix()
+
+tweet = Tweet(1, "Hello world im here yes you are and you're doing it mr. Mackey")
+print(tweet.stemmed)
 
 
 
