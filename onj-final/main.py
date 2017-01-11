@@ -22,18 +22,23 @@ def get_negAndpos(matrix):
 
     return [all_pos, all_neg, all_neutral]
 
-x = pd.read_csv('downloaded.tsv', sep='\t')
-matrix = x.as_matrix()
+x = pd.read_csv('train-A.tsv', sep='\t')
+matrix_train = x.as_matrix()
 
 
 
 vect = TfidfVectorizer()
-tfidf = vect.fit_transform(get_negAndpos(matrix))
+tfidf = vect.fit_transform(get_negAndpos(matrix_train))
 
-weights = vect.transform(["are yall really mad that he's paying $200 to fix a broken iPad, don't yall have bigger problems to deal with"])
+
+x = pd.read_csv('test-A.tsv', sep='\t')
+matrix_test = x.as_matrix()
+weights = vect.transform(matrix_test[:,2])
 
 classes = ['positive', 'negative', 'neutral']
-print(classes[np.argmax(tfidf.A.dot(weights.T.A))])
+res = [classes[x] for x in np.argmax(tfidf.A.dot(weights.T.A), axis=0)]
+#print(classes[np.argmax(tfidf.A.dot(weights.T.A))])
+print("klasifikacijska tocnost " + str(np.sum([1 if x==y else 0 for x,y in zip(res, matrix_test[:,1])])/len(res)))
 
 
 
