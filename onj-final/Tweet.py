@@ -4,7 +4,7 @@ import re
 import numpy as np
 from nltk import word_tokenize, PorterStemmer
 from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords, wordnet
 
 
 class Tweet(object):
@@ -38,6 +38,7 @@ class Tweet(object):
         self.message_without_url = self.remove_url()
         self.message_without_punctuation = self.remove_punctuation()
         self.create_tokens()
+        self.replace_synonyms()
         self.lemmatize_tokens()
         self.stem_tokens()
 
@@ -67,6 +68,12 @@ class Tweet(object):
 
     def remove_url(self):
         return re.sub(self.URL_REGEX, '', self.message)
+
+    def replace_synonyms(self):
+        for i in range(len(self.tokens)):
+            for synset in wordnet.synsets(self.tokens[i]):
+                if len(synset.lemmas()) > 0:
+                    self.tokens[i] = synset.lemmas()[0].name()
 
     @staticmethod
     def get_all_messages(tweets):
