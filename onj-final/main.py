@@ -1,45 +1,36 @@
-import nltk
-import string
-from sklearn.feature_extraction.text import TfidfVectorizer
-import pandas as pd
 import numpy as np
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Prepare text
-def getTokens():
-   with open('shakespeare.txt', 'r') as shakes:
-    text = shakes.read().lower()
-    # remove punctuation
-    table = text.maketrans({key: None for key in string.punctuation})
-    text = text.translate(table)
-    tokens = nltk.word_tokenize(text)
-    return tokens
+from Tweet import Tweet
 
 
-def get_negAndpos(matrix):
-    all_pos = " ".join([x[2] for x in matrix if x[1] == 'positive'])
-    all_neg = " ".join([x[2] for x in matrix if x[1] == 'negative'])
-    all_neutral = " ".join([x[2] for x in matrix if x[1] == 'neutral'])
-
+def get_negAndpos(tweets):
+    all_pos = " ".join([tweet.message_without_punctuation for tweet in tweets if tweet.sentiment == Tweet.POSITIVE])
+    all_neg = " ".join([tweet.message_without_punctuation for tweet in tweets if tweet.sentiment == Tweet.NEGATIVE])
+    all_neutral = " ".join([tweet.message_without_punctuation for tweet in tweets if tweet.sentiment == Tweet.NEUTRAL])
+    print(type(all_pos))
     return [all_pos, all_neg, all_neutral]
 
-x = pd.read_csv('train-A.tsv', sep='\t')
-matrix_train = x.as_matrix()
+
+def get_tweets(data_file):
+    tweets = []
+    matrix = pd.read_csv(data_file, sep='\t').as_matrix()
+    for tweet in matrix:
+        tweets.append(Tweet(tweet[0], tweet[1], tweet[2]))
+    return tweets
 
 
+trainTweets = get_tweets('data/train-A.tsv')
+testTweets = get_tweets('data/test-A.tsv')
 
 vect = TfidfVectorizer()
-tfidf = vect.fit_transform(get_negAndpos(matrix_train))
+tfidf = vect.fit_transform(get_negAndpos(trainTweets))
+print(type(tfidf))
 
+weights = vect.transform(Tweet.get_all_messages(testTweets))
+print(weights)
 
-x = pd.read_csv('test-A.tsv', sep='\t')
-matrix_test = x.as_matrix()
-weights = vect.transform(matrix_test[:,2])
-
-classes = ['positive', 'negative', 'neutral']
-res = [classes[x] for x in np.argmax(tfidf.A.dot(weights.T.A), axis=0)]
-#print(classes[np.argmax(tfidf.A.dot(weights.T.A))])
-print("klasifikacijska tocnost " + str(np.sum([1 if x==y else 0 for x,y in zip(res, matrix_test[:,1])])/len(res)))
-
-
-
-
+res = [Tweet.classes[x] for x in np.argmax(tfidf.A.dot(weights.T.A), axis=0)]
+print("klasifikacijska tocnost " + str(
+    np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets))]) / len(res)))
