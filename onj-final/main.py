@@ -6,6 +6,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from Tweet import Tweet
 from sklearn.ensemble import RandomForestClassifier
+import Evaluate
 
 
 def get_negAndpos(tweets):
@@ -67,9 +68,12 @@ weights = vect.transform(Tweet.get_all_messages(testTweets))
 res = [Tweet.classes[x] for x in np.argmax(tfidf.A.dot(weights.T.A), axis=0)]
 print("klasifikacijska tocnost " + str(
     np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets))]) / len(res)))
+print(Evaluate.evaluateA(res, Tweet.get_all_sentiment(testTweets)))
 
 clf = RandomForestClassifier(n_estimators=25)
 clf.fit(logRegTrainData(trainTweets), Tweet.get_all_sentiment(trainTweets))
 res = clf.predict(tfidf.A.dot(weights.T.A).T)
 print("klasifikacijska tocnost regresija " + str(
     np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets))]) / len(res)))
+
+print(Evaluate.evaluateA(res, Tweet.get_all_sentiment(testTweets)))
