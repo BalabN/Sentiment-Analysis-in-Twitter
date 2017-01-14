@@ -91,8 +91,12 @@ Social media has greatly democratized content creation. Facebook, Twitter, Skype
 \section{Dataset}
 For tasks we are provided with their datasets with annotated tweets. They are gathered in a way, that express sentiment about popular topics. For this purpose, they extracted named entities from millions of tweets. The collected tweets were greatly skewed towards the neutral class. To reduce the class imbalance, they removed those that contained no sentiment-bearing words. Tweets are then manually filtered to obtain a set of meaningful topics with at least 100 tweets each. Topics that are ambiguous (e.q.., Barcelona, which is a city or sport club) or too general (e.q., Paris). The topics in the training and in the test data do not overlap, meaning that test tweets consist of topics that are different from the topics in train dataset. Dataset is consisted of four parts: TRAIN (for training models), DEV (for tuning models), DEVTEST (for development-time evaluation) and TEST (for official evaluation). The first three datasets were annotated using Amazon's Mechanical Turk , while the TEST dataset was annotated on CrowdFlower. 
 
+\section{Related work}
+There are a lot of related work, that also competed in Sentiment Analysis in Twitter.
 
+ In work~\cite{vilaresa2016lys}, they have trained convolutional neural network (CNN) to extract hidden activation values from the hidden layers once some input had been fed to the network. That values served as features for SVM model. They have discovered that CNN serves good as feature extractor but not as good as independent classifier. They have received good results and were on the top of the rankings list. Their best results were for tasks B (2./14),C(4/11) and D(2/14). Their approach is very different from ours since they entirely use models with machine learning and our method is more calculating similarities between tweets. 
 
+In work~\cite{briones2016vcu} they have used simple unigram model baseline with three main features enchantments incorporated into the model. This features are emoticon retention, word stemming and token saliency calculation. This work is similar to ours, since they also uses TF-IDF to calculate similarities between tweets. They preprocessed text with word stemming, while we used lemmatizing. With stemming or lemmatizing, the emoticons get lost. In order to preserve emoticons, they have extracted it before stemming and use them as features. They also used unigrams to achieve better results. We didn't used them because we got worst performance.
 
 \subsection{Evaluation and discussion}
 
@@ -138,12 +142,40 @@ For subtask B each tweet must be classified as either positive or negative. For 
 \varphi^{PN} = \frac{1}{2}(\varphi^P + \varphi^N) \\
 = \frac{1}{2}(\frac{PP}{PP + NP} + \frac{NN}{NN + PN})
 \end{equation}
-$\varphi^{PN}$ ranges from 0 to 1, where a value of 1 is the best score, while 0 means that classifier misclassified all items. 
+$\varphi^{PN}$ ranges from 0 to 1, where a value of 1 is the best score, while 0 means that classifier misclassified all items. This method is better than classic accuracy because its more robust to class invariance. 
 
-\subsection{Figures}
+The evaluation for subtask B is evaluated independently for each topic. The results are then averaged across topics to yield the final score.
+
+
+\subsection{Subtask C: Tweet classification according to a five-point scale}
+
+Subtask is an ordinal classification task, in witch each tweet must be classified into exactly one of the classes that are highly-positive, positive, neutral, negative and highly-negative. Classes are represented as numbers {+2, +1, 0, -1, -2} in mentioned above order. For evaluation we use macro-averaged mean absolute error ($MAE^M$):
+
+\begin{equation}
+MAE^M(h, Te) = \frac{1}{|C|}\sum_{j=1}^{|C|}\frac{1}{|Te_j|}\sum_{x_i\in Te_j}|h(x_i) - y_i|
+\end{equation}
+where $y_i$ denotes the true label of item $x_i$ and $h(x_i)$ is its predicted value. $Te_j$ denotes the set of test document whose true class is $c_j$ and $|h(x_i) - y_i|$ denotes the distance between classes $h(x_i)$ and $y_i$. The advantage of $MAE^M$ over standard $MAE$ is that it is robust to class imbalance. Unlike the previous mentioned methods, the lower the score value is, the better results are. 
 
 
 
+\subsection{Subtask D: Tweet quantification according to a two point scale}
+
+Subtask D assumes a binary quantification setup, in which each tweet is classified as positive or negative. The task is to compute an estimate of the distribution of each of the classes. For evaluation there is used normalized cross-entropy, known as Kullback-Leibler Divergence ($KLD$):
+
+\begin{equation}
+KLD(q, p, C) = \sum_{c_j \in C}p(c_j)\log_e\frac{p(c_j)}{q(c_j)}
+\end{equation}
+$KLD$ is a measure of the error made in estimating a true distribution $p$ over set of classes ($C$) by means of a predicted distribution $q$. $KLD$ ranges between 0 and $+\inf$, where lower value is better. $KLD$ is computed individually for each topic, and results are averaged to yield the final score.
+
+\subsection{Subtask E: Tweet quantification according to a five-point scale}
+
+Subtask E is an ordinal quantification (OQ) task, in which each tweet belongs exactly to one of the classes : highly positive, positive, neutral, negative, highly negative. The measure used for OQ is the Earth Mover's Distance ($EMD$):  
+
+\begin{equation}
+EMD(q, p) = \sum_{j=1}^{|C| - 1}|\sum_{i=1}^jq(c_i) - \sum_{i=1}^jp(c_i)|
+\end{equation}
+
+This is also a measure of error, therefore lower values are better.$EMD$ is computed individually for each topic, and results are then averaged across all topics to yield the final score.
 \begin{figure}
 \centering
 \includegraphics[height=6.2cm]{eijkel2}
@@ -153,15 +185,11 @@ $\varphi^{PN}$ ranges from 0 to 1, where a value of 1 is the best score, while 0
 
 
 
-\subsection{Formulas}
-
-\begin{equation}
-  \psi (u) = \int_{o}^{T} \left[\frac{1}{2}
-  \left(\Lambda_{o}^{-1} u,u\right) + N^{\ast} (-u)\right] dt \;  .
-\end{equation}
 
 
-\section{The References Section}\label{references}
+
+
+
 
 \begin{thebibliography}{4}
 
@@ -189,5 +217,19 @@ Integration. Technical report, Global Grid Forum (2002)
 
 \end{thebibliography}
 
+@inproceedings{vilaresa2016lys,
+  title={LYS at SemEval-2016 Task 4: Exploiting neural activation values for Twitter sentiment classification and quantification},
+  author={Vilaresa, David and Dovala, Yerai and Alonsoa, Miguel A and G{\'o}mez-Rodr{\i}gueza, Carlos},
+  booktitle={Proceedings of the 10th International Workshop on Semantic Evaluation (SemEval 2016), San Diego, US},
+  year={2016}
+}
+
+@article{briones2016vcu,
+  title={VCU-TSA at Semeval-2016 Task 4: Sentiment Analysis in Twitter},
+  author={Briones, Gerard and Amarasinghe, Kasun and McInnes, Bridget T},
+  journal={Proceedings of SemEval},
+  pages={215--219},
+  year={2016}
+}
 
 \end{document}
