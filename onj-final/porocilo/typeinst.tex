@@ -47,13 +47,8 @@ Contributions\\to LNCS/LNAI/LNBI Proceedings}
 % their surnames. This ensures that the names appear correctly in
 % the running heads and the author index.
 %
-\author{Alfred Hofmann%
-\thanks{Please note that the LNCS Editorial assumes that all authors have used
-the western naming convention, with given names preceding surnames. This determines
-the structure of the names in the running heads and the author index.}%
-\and Ursula Barth\and Ingrid Haas\and Frank Holzwarth\and\\
-Anna Kramer\and Leonie Kunz\and Christine Rei\ss\and\\
-Nicole Sator\and Erika Siebert-Cole\and Peter Stra\ss er}
+\author{Alfred Hofmann}%
+
 %
 \authorrunning{Lecture Notes in Computer Science: Authors' Instructions}
 % (feature abused for this document to repeat the title also on left hand pages)
@@ -89,18 +84,61 @@ the abstract section}
 
 
 \section{Introduction}
+Social media has greatly democratized content creation. Facebook, Twitter, Skype, Whatsapp and LiveJournal are commonly used to share any thoughts and opinions about anything in the surrounding world. All this content has created new opportunities to study public opinion. Twitter is especially popular for research due to its scale, representative, variety of topics discussed and its ease access to content. In the past years, research in that direction was hindered by the unavailability of suitable datasets and lexicons for system training, development and testing. Some Twitter-specific resources were developed, but they were either small and proprietary, or they relied on noisy labels obtained automatically. This all changed with the shared task on Sentiment Analysis on Twitter, which is part of the international Worksop on Semantic Evaluation. The task is active since 2013 and it attract over 40+ participant teams. It contains 5 subtasks with their train and test datasets. First task is Message Polarity Classification, where we need to classify whether the given message is of positive, negative, or neutral sentiment. In second and third task, there is beside a given message, also a topic and you need to classify the message on two point scale and five-point scale, depending on the task. Forth and fifth task are also on two point and five point scale, where there are given tweets about a given topic, and you need to estimate their distribution.
 
-\subsection{Checking the PDF File}
 
-\subsection{Additional Information Required by the Volume Editor}
 
-\subsection{Copyright Forms}
+\section{Dataset}
+For tasks we are provided with their datasets with annotated tweets. They are gathered in a way, that express sentiment about popular topics. For this purpose, they extracted named entities from millions of tweets. The collected tweets were greatly skewed towards the neutral class. To reduce the class imbalance, they removed those that contained no sentiment-bearing words. Tweets are then manually filtered to obtain a set of meaningful topics with at least 100 tweets each. Topics that are ambiguous (e.q.., Barcelona, which is a city or sport club) or too general (e.q., Paris). The topics in the training and in the test data do not overlap, meaning that test tweets consist of topics that are different from the topics in train dataset. Dataset is consisted of four parts: TRAIN (for training models), DEV (for tuning models), DEVTEST (for development-time evaluation) and TEST (for official evaluation). The first three datasets were annotated using Amazon's Mechanical Turk , while the TEST dataset was annotated on CrowdFlower. 
 
-\section{Paper Preparation}
 
-\subsubsection{Headings.}
 
-\subsubsection{Lemmas, Propositions, and Theorems.}
+
+\subsection{Evaluation and discussion}
+
+
+\subsection{Subtask A: Message polarity classification}
+Subtask A is a single-label multi-class(SLMC) classification task. Each tweet must be classified as positive, neutral or negative. The evaluation score is measured as $F^{PN}_1$:
+\begin{equation}
+F^{PN}_1 = \frac{F^P_1 + F^N_1}{2}
+\end{equation}
+$F_1^P$ is $F_1$ for the positive class:
+
+\begin{equation}
+F^{P}_1 = \frac{2\pi^P\varphi^P}{\pi^P + \varphi^P}
+\end{equation}
+
+Here $\pi^P$ and $\varphi^P$ denote precision and recall for the positive class, respectively: 
+
+\begin{equation}
+\pi^P = \frac{PP}{PP + PU + PN}
+\end{equation}
+
+\begin{equation}
+\varphi^P = \frac{PP}{PP + UP + NP}
+\end{equation}
+
+where $PP$, $UP$, $NP$, $PU$, $PN$ are the cells of the confusion matrix shown in table. 
+
+\begin{center}
+  \begin{tabular}{ | l | l | c | r |}
+    \hline
+  predicted/real   & positive & neutral & negative \\ \hline
+   positive  & PP & PU & PN \\ \hline
+   neutral  & UP & UU & UN \\ \hline
+   negative  & NP & NU & NN \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Subtask B: Tweet classification according to a two-point scale}
+For subtask B each tweet must be classified as either positive or negative. For this subtask they have adopted macro-averaged recall: 
+
+\begin{equation}
+\varphi^{PN} = \frac{1}{2}(\varphi^P + \varphi^N) \\
+= \frac{1}{2}(\frac{PP}{PP + NP} + \frac{NN}{NN + PN})
+\end{equation}
+$\varphi^{PN}$ ranges from 0 to 1, where a value of 1 is the best score, while 0 means that classifier misclassified all items. 
 
 \subsection{Figures}
 
@@ -109,26 +147,11 @@ the abstract section}
 \begin{figure}
 \centering
 \includegraphics[height=6.2cm]{eijkel2}
-\caption{One kernel at $x_s$ (\emph{dotted kernel}) or two kernels at
-$x_i$ and $x_j$ (\textit{left and right}) lead to the same summed estimate
-at $x_s$. This shows a figure consisting of different types of
-lines. Elements of the figure described in the caption should be set in
-italics, in parentheses, as shown in this sample caption.}
+\caption{}
 \label{fig:example}
 \end{figure}
 
 
-
-\paragraph{Remark 1.}
-
-In the printed volumes, illustrations are generally black and white
-(halftones), and only in exceptional cases, and if the author is
-prepared to cover the extra cost for color reproduction, are colored
-pictures accepted. Colored pictures are welcome in the electronic
-version free of charge. If you send colored figures that are to be
-printed in black and white, please make sure that they really are
-legible in black and white. Some colors as well as the contrast of
-converted colors show up very poorly when printed in black and white.
 
 \subsection{Formulas}
 
@@ -137,68 +160,6 @@ converted colors show up very poorly when printed in black and white.
   \left(\Lambda_{o}^{-1} u,u\right) + N^{\ast} (-u)\right] dt \;  .
 \end{equation}
 
-\subsection{Footnotes}
-
-\subsection{Program Code}
-
-Program listings or program commands in the text are normally set in
-typewriter font, e.g., CMTT10 or Courier.
-
-\medskip
-
-\noindent
-{\it Example of a Computer Program}
-\begin{verbatim}
-program Inflation (Output)
-  {Assuming annual inflation rates of 7%, 8%, and 10%,...
-   years};
-   const
-     MaxYears = 10;
-   var
-     Year: 0..MaxYears;
-     Factor1, Factor2, Factor3: Real;
-   begin
-     Year := 0;
-     Factor1 := 1.0; Factor2 := 1.0; Factor3 := 1.0;
-     WriteLn('Year  7% 8% 10%'); WriteLn;
-     repeat
-       Year := Year + 1;
-       Factor1 := Factor1 * 1.07;
-       Factor2 := Factor2 * 1.08;
-       Factor3 := Factor3 * 1.10;
-       WriteLn(Year:5,Factor1:7:3,Factor2:7:3,Factor3:7:3)
-     until Year = MaxYears
-end.
-\end{verbatim}
-%
-\noindent
-{\small (Example from Jensen K., Wirth N. (1991) Pascal user manual and
-report. Springer, New York)}
-
-\subsection{Citations}
-
-For citations in the text please use
-square brackets and consecutive numbers: \cite{jour}, \cite{lncschap},
-\cite{proceeding1} -- provided automatically
-by \LaTeX 's \verb|\cite| \dots\verb|\bibitem| mechanism.
-
-\subsection{Page Numbering and Running Heads}
-
-There is no need to include page numbers. If your paper title is too
-long to serve as a running head, it will be shortened. Your suggestion
-as to how to shorten it would be most welcome.
-
-\section{LNCS Online}
-
-\section{BibTeX Entries}
-
-The correct BibTeX entries for the Lecture Notes in Computer Science
-volumes can be found at the following Website shortly after the
-publication of the book:
-\url{http://www.informatik.uni-trier.de/~ley/db/journals/lncs.html}
-
-\subsubsection*{Acknowledgments.} The heading should be treated as a
-subsubsection heading and should not be assigned a number.
 
 \section{The References Section}\label{references}
 
@@ -229,29 +190,4 @@ Integration. Technical report, Global Grid Forum (2002)
 \end{thebibliography}
 
 
-\section*{Appendix: Springer-Author Discount}
-
-LNCS authors are entitled to a 33.3\% discount off all Springer
-publications. Before placing an order, the author should send an email, 
-giving full details of his or her Springer publication,
-to \url{orders-HD-individuals@springer.com} to obtain a so-called token. This token is a
-number, which must be entered when placing an order via the Internet, in
-order to obtain the discount.
-
-\section{Checklist of Items to be Sent to Volume Editors}
-Here is a checklist of everything the volume editor requires from you:
-
-
-\begin{itemize}
-\settowidth{\leftmargin}{{\Large$\square$}}\advance\leftmargin\labelsep
-\itemsep8pt\relax
-\renewcommand\labelitemi{{\lower1.5pt\hbox{\Large$\square$}}}
-
-\item The final \LaTeX{} source files
-\item A final PDF file
-\item A copyright form, signed by one author on behalf of all of the
-authors of the paper.
-\item A readme giving the name and email address of the
-corresponding author.
-\end{itemize}
 \end{document}
