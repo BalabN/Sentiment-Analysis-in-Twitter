@@ -59,7 +59,7 @@ tfidf = vect.fit_transform(get_negAndpos(trainTweets))
 
 weights = vect.transform(Tweet.get_all_messages(testTweets))
 
-res = [Tweet.classes[x] for x in np.argmax(tfidf.A.dot(weights.T.A), axis=0)]
+res = [Tweet.sentiments[x] for x in np.argmax(tfidf.A.dot(weights.T.A), axis=0)]
 print("klasifikacijska tocnost " + str(
     np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets))]) / len(res)))
 print(Evaluate.evaluateB(res, Tweet.get_all_sentiment(testTweets)))

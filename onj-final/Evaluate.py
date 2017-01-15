@@ -1,9 +1,3 @@
-
-
-
-
-
-
 def evaluateA(res, y):
     PP = 0
     PU = 0
@@ -38,14 +32,14 @@ def evaluateA(res, y):
             else:
                 NN += 1
 
-    pip = PP/(PP + PU + PN)
-    fip = PP/(PP + UP + NP)
+    pip = PP / (PP + PU + PN)
+    fip = PP / (PP + UP + NP)
 
     pin = NN / (PP + PU + PN)
     fin = NN / (PP + UP + NP)
 
-    Fp = 2*pip * fip/(fip + pip)
-    Fn = 2*pin *fin/(fin + pin)
+    Fp = 2 * pip * fip / (fip + pip)
+    Fn = 2 * pin * fin / (fin + pin)
     print((Fp + Fn) / 2)
     return (Fp + Fn) / 2
 
@@ -68,6 +62,6 @@ def evaluateB(res, y):
             else:
                 NN += 1
 
-    e = 0.5*(PP/(PP+NP) + NN/(NN + PN))
+    e = 0.5 * (PP / (PP + NP) + NN / (NN + PN))
     print(e)
     return e
