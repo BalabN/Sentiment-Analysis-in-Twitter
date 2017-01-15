@@ -87,13 +87,13 @@ def plot_fdist(pos_tok, neg_tok, neu_tok):
     fdist_pos = FreqDist(pos_tok)
     fdist_neg = FreqDist(neg_tok)
     fdist_neu = FreqDist(neu_tok)
-    show_bar_plot([i[0] for i in fdist_all.most_common(10)], [i[1] for i in fdist_all.most_common(10)],
+    show_bar_plot([i[0] for i in fdist_all.most_common(7)], [i[1] for i in fdist_all.most_common(7)],
                   "Frequency distribution of all tweets")
-    show_bar_plot([i[0] for i in fdist_pos.most_common(10)], [i[1] for i in fdist_pos.most_common(10)],
+    show_bar_plot([i[0] for i in fdist_pos.most_common(7)], [i[1] for i in fdist_pos.most_common(7)],
                   "Frequency distribution of positive tweets")
-    show_bar_plot([i[0] for i in fdist_neg.most_common(10)], [i[1] for i in fdist_neg.most_common(10)],
+    show_bar_plot([i[0] for i in fdist_neg.most_common(7)], [i[1] for i in fdist_neg.most_common(7)],
                   "Frequency distribution of negative tweets")
-    show_bar_plot([i[0] for i in fdist_neu.most_common(10)], [i[1] for i in fdist_neu.most_common(10)],
+    show_bar_plot([i[0] for i in fdist_neu.most_common(7)], [i[1] for i in fdist_neu.most_common(7)],
                   "Frequency distribution of neutral tweets")
 
 
