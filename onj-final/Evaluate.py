@@ -48,3 +48,26 @@ def evaluateA(res, y):
     Fn = 2*pin *fin/(fin + pin)
     print((Fp + Fn) / 2)
     return (Fp + Fn) / 2
+
+
+def evaluateB(res, y):
+    PP = 0
+    PN = 0
+    NP = 0
+    NN = 0
+    for i in range(0, len(res)):
+        if res[i] == 1:
+            if y[i] == 1:
+                PP += 1
+            else:
+                PN += 1
+
+        elif res[i] == 3:
+            if y[i] == 1:
+                NP += 1
+            else:
+                NN += 1
+
+    e = 0.5*(PP/(PP+NP) + NN/(NN + PN))
+    print(e)
+    return e

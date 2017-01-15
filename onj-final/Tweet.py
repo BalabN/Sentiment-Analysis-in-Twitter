@@ -42,6 +42,21 @@ class Tweet(object):
         self.lemmatize_tokens()
         self.stem_tokens()
 
+    def __init__(self, tId, topic, sentiment, message):
+        self.lemmatizer = WordNetLemmatizer()
+        self.stemmer = PorterStemmer()
+        self.english_stops = set(stopwords.words('english'))
+
+        self.id = tId
+        self.get_sentiment(sentiment)
+        self.message = message
+        self.message_without_url = self.remove_url()
+        self.message_without_punctuation = self.remove_punctuation()
+        self.create_tokens()
+        self.replace_synonyms()
+        self.lemmatize_tokens()
+        self.stem_tokens()
+
     def get_sentiment(self, sentiment):
         if sentiment == 'positive':
             self.sentiment = self.POSITIVE
