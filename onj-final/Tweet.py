@@ -15,12 +15,9 @@ class Tweet(object):
     POSITIVE = 1
     NEUTRAL = 2
     NEGATIVE = 3
-<<<<<<< HEAD
     VERYNEGATIVE = 4
-    classes = [POSITIVE, NEGATIVE, NEUTRAL, VERYPOSITIVE, VERYNEGATIVE]
-=======
-    sentiments = [POSITIVE, NEGATIVE, NEUTRAL]
->>>>>>> 213dffe6e904dc2c7dfc4d84d6912f4c19ab7971
+    sentiments = [POSITIVE, NEGATIVE, NEUTRAL, VERYPOSITIVE, VERYNEGATIVE]
+
     URL_REGEX = '[hH][tT][tT][pP][sS]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 
     lemmatizer = ""
@@ -37,25 +34,6 @@ class Tweet(object):
     stemmed = []
     english_stops = []
 
-<<<<<<< HEAD
-=======
-    def __init__(self, tId, sentiment, message):
-        self.lemmatizer = WordNetLemmatizer()
-        self.stemmer = PorterStemmer()
-        self.english_stops = set(stopwords.words('english'))
-
-        self.id = tId
-        self.get_sentiment(sentiment)
-        self.message = message.lower()
-        self.profanity_count = self.get_profanity_count()
-        self.message_without_url = self.remove_url()
-        self.message_without_punctuation = self.remove_punctuation()
-        self.create_tokens()
-        self.replace_synonyms()
-        self.lemmatize_tokens()
-        self.stem_tokens()
-
->>>>>>> 213dffe6e904dc2c7dfc4d84d6912f4c19ab7971
     def __init__(self, tId, topic, sentiment, message):
         self.lemmatizer = WordNetLemmatizer()
         self.stemmer = PorterStemmer()
@@ -138,9 +116,17 @@ class Tweet(object):
         return np.array(messages)
 
     @staticmethod
-<<<<<<< HEAD
     def get_all_sentiment(tweets, topic=None):
-=======
+        messages = []
+        for tweet in tweets:
+            if topic == None:
+                messages.append(tweet.message_without_punctuation)
+            if topic != None and topic == tweet.topic:
+                messages.append(tweet.message_without_punctuation)
+        return np.array(messages)
+
+
+    @staticmethod
     def get_all_messages_sentiment(tweets, sentiment):
         messages = []
         for tweet in tweets:
@@ -149,8 +135,7 @@ class Tweet(object):
         return np.array(messages)
 
     @staticmethod
-    def get_all_sentiment(tweets):
->>>>>>> 213dffe6e904dc2c7dfc4d84d6912f4c19ab7971
+    def get_all_sentiment(tweets, topic=None):
         sentiments = []
         for tweet in tweets:
             if topic == None:
