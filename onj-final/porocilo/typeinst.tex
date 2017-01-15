@@ -21,7 +21,7 @@
 \usepackage{amssymb}
 \setcounter{tocdepth}{3}
 \usepackage{graphicx}
-\usepackage{subcaption}
+\usepackage{subfig}
 \graphicspath{ {figures/} }
 
 \usepackage{url}
@@ -36,12 +36,10 @@
 \mainmatter  % start of an individual contribution
 
 % first the title is needed
-\title{Lecture Notes in Computer Science:\\Authors' Instructions
-for the Preparation\\of Camera-Ready
-Contributions\\to LNCS/LNAI/LNBI Proceedings}
+\title{Detecting sentiment, humor, and truth:\\Sentiment Analysis in Twitter}
 
 % a short form should be given in case it is too long for the running head
-\titlerunning{Lecture Notes in Computer Science: Authors' Instructions}
+\titlerunning{Detecting sentiment, humor, and truth:Sentiment Analysis in Twitter}
 
 % the name(s) of the author(s) follow(s) next
 %
@@ -49,20 +47,17 @@ Contributions\\to LNCS/LNAI/LNBI Proceedings}
 % their surnames. This ensures that the names appear correctly in
 % the running heads and the author index.
 %
-\author{Alfred Hofmann}%
+\author{Bo\v{s}tjan Bohte, Nikola Balaban}%
 
 %
-\authorrunning{Lecture Notes in Computer Science: Authors' Instructions}
+\authorrunning{Detecting sentiment, humor, and truth:Sentiment Analysis in Twitter}
 % (feature abused for this document to repeat the title also on left hand pages)
 
 % the affiliations are given next; don't give your e-mail address
 % unless you accept that it will be published
-\institute{Springer-Verlag, Computer Science Editorial,\\
-Tiergartenstr. 17, 69121 Heidelberg, Germany\\
-\mailsa\\
-\mailsb\\
-\mailsc\\
-\url{http://www.springer.com/lncs}}
+\institute{Faculty of Computer and Information Science, University of Ljubljana.\\
+ Večna pot 113, 1001 Ljubljana, Slovenia\\
+\url{http://www.fri.uni-lj.si/}}
 
 %
 % NB: a more complex sample for affiliations and the mapping to the
@@ -71,8 +66,8 @@ Tiergartenstr. 17, 69121 Heidelberg, Germany\\
 % "llncs.dem" accompanies the document class "llncs.cls".
 %
 
-\toctitle{Lecture Notes in Computer Science}
-\tocauthor{Authors' Instructions}
+\toctitle{Detecting sentiment, humor, and truth}
+\tocauthor{Sentiment Analysis in Twitter}
 \maketitle
 
 
@@ -91,42 +86,50 @@ Social media has greatly democratized content creation. Facebook, Twitter, Skype
  To reduce the class imbalance, they removed those that contained no sentiment-bearing words. Tweets are then manually filtered to obtain a set of meaningful topics with at least 100 tweets each. Topics that are ambiguous (e.q.., Barcelona, which is a city or sport club) or too general (e.q., Paris). The topics in the training and in the test data do not overlap, meaning that test tweets consist of topics that are different from the topics in train dataset. Dataset is consisted of four parts: TRAIN (for training models), DEV (for tuning models), DEVTEST (for development-time evaluation) and TEST (for official evaluation). The first three datasets were annotated using Amazon's Mechanical Turk , while the TEST dataset was annotated on CrowdFlower.
  
 \section{Data Pre-Processing}
-First we tokenized and lemmatised the data and calculated frequency distributions of all data and divided data by sentiment. (\emph{See Fig.3 for most common words}). As we can see most frequent words and distribution is the same across all dataset because they have the same topic.
+First we tokenized and lemmatised the data and calculated frequency distributions of all data and divided data by sentiment. (\emph{See Fig.1 for most common words}).
 
-\begin{figure}[h]
- 
-\begin{subfigure}{0.5\textwidth}
-\includegraphics[width=0.9\linewidth, height=5cm]{figure_fdist_all.png} 
-\caption{Frequency distribution of all tweets}
-\end{subfigure}
-\begin{subfigure}{0.5\textwidth}
-\includegraphics[width=0.9\linewidth, height=5cm]{figure_fdist_pos.png}
-\caption{Frequency distribution of positive tweets}
-\end{subfigure}
+\begin{figure}[htp] % not h only
+\centering
+\subfloat[Frequency distribution of all tweets]{%
+\includegraphics[width=0.39\textwidth]{figure_fdist_all.png}%
+\label{fig:q_time_all}%
+}\hfil
+\subfloat[Frequency distribution of positive tweets]{%
+\includegraphics[width=0.39\textwidth]{figure_fdist_pos.png}%
+\label{fig:q_time_sat}%
+}
 
-\end{figure}
-\begin{figure}[h]
+\subfloat[Frequency distribution of negative tweets]{%
+\includegraphics[width=0.39\textwidth]{figure_fdist_neg.png}%
+\label{fig:q_time_unsat}%
+}\hfil
+\subfloat[Frequency distribution of neutral tweets]{%
+\includegraphics[width=0.39\textwidth]{figure_fdist_neu.png}%
+\label{fig:q_time_sample}%
+}
 
-\begin{subfigure}{0.5\textwidth}
-\includegraphics[width=0.9\linewidth, height=5cm]{figure_fdist_neg.png} 
-\caption{Frequency distribution of negative tweets}
-\end{subfigure}
-\begin{subfigure}{0.5\textwidth}
-\includegraphics[width=0.9\linewidth, height=5cm]{figure_fdist_neu.png}
-\caption{Frequency distribution of neutral tweets}
-\end{subfigure}
- 
 \caption{Frequency distribution in data divided by sentiment}
-\label{fig:image2}
-\end{figure}
+\end{figure} 
 
-Then we filtered the profanity words to see if they have any impact on sentiment of a Tweeter message. \emph{Fig.4} shows the frequency of profanity words by sentiment of Tweeter messages.
+As we can see most frequent words and distribution is the same across all dataset because they have the same topic.
+
+Then we filtered the profanity words to see if they have any impact on sentiment of a Tweeter message. \emph{Fig.2} shows the frequency of profanity words by sentiment of Tweeter messages.
 
 \begin{figure}
 \centerline{\includegraphics[scale=0.35]{figure_fdist_sentiment.png}}
 \caption{Frequency distribution of profanity words across Tweeter messages by sentiment}
 \label{fig:Image4}
 \end{figure}
+
+Both positive and negative sentiment tweets as we can see have more profanity words than neutral tweets. But still the use of profanity words is much common in messages with negative sentiment. This kind of data we can later use to optimize our weights for machine learning or regression or other classification methods.
+
+Next we wanted to see the effect of emoticons on sentiment of the message. We tried one classification with three different datasets. One with no emoticons \emph{(1.)}, one with just some identifier for emoticon \emph{(2.)} and one with sentiment of the emoticon included \emph{(3.)}. The tests were as following:
+\begin{enumerate}
+	\item Classification accuracy: 38.93 \%
+	\item Classification accuracy: 38.93 \%
+	\item Classification accuracy: 38.98 \%.
+\end{enumerate}
+So we can see that the emoticons have some small impact on sentiment but it can be used even more to give more value to weights.
 
 \section{Related work}
 There are a lot of related work, that also competed in Sentiment Analysis in Twitter.
@@ -221,7 +224,8 @@ This is also a measure of error, therefore lower values are better.$EMD$ is comp
 \end{figure}
 
 
-
+\section{Conclusion}
+That is it
 
 
 
