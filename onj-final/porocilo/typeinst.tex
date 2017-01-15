@@ -75,11 +75,8 @@ Tiergartenstr. 17, 69121 Heidelberg, Germany\\
 
 
 \begin{abstract}
-The abstract should summarize the contents of the paper and should
-contain at least 70 and at most 150 words. It should be written using the
-\emph{abstract} environment.
-\keywords{We would like to encourage you to list your keywords within
-the abstract section}
+The basis of this project was to create a program which can predict the sentiment of a message posted on Tweeter by using common NLP tools and techniques. Idea was to see the impact of word frequency, emoticons and other word sentiment to sentiment of the whole message. We first processed text with lemmatisation and tried three techniques on that data. The outcomes were very different but we could see that with small changes in data processing we get significant improvements.
+\keywords{NLP, classification, SemEval 2017, sentiment analysis, logistic regression, Naive Bayes , TD-IDFT}
 \end{abstract}
 
 
@@ -89,7 +86,9 @@ Social media has greatly democratized content creation. Facebook, Twitter, Skype
 
 
 \section{Dataset}
-For tasks we are provided with their datasets with annotated tweets. They are gathered in a way, that express sentiment about popular topics. For this purpose, they extracted named entities from millions of tweets. The collected tweets were greatly skewed towards the neutral class. To reduce the class imbalance, they removed those that contained no sentiment-bearing words. Tweets are then manually filtered to obtain a set of meaningful topics with at least 100 tweets each. Topics that are ambiguous (e.q.., Barcelona, which is a city or sport club) or too general (e.q., Paris). The topics in the training and in the test data do not overlap, meaning that test tweets consist of topics that are different from the topics in train dataset. Dataset is consisted of four parts: TRAIN (for training models), DEV (for tuning models), DEVTEST (for development-time evaluation) and TEST (for official evaluation). The first three datasets were annotated using Amazon's Mechanical Turk , while the TEST dataset was annotated on CrowdFlower. 
+ For tasks we are provided with their datasets with annotated tweets. They are gathered in a way, that express sentiment about popular topics. For this purpose, they extracted named entities from millions of tweets. The collected tweets were greatly skewed towards the neutral class. 
+ 
+ To reduce the class imbalance, they removed those that contained no sentiment-bearing words. Tweets are then manually filtered to obtain a set of meaningful topics with at least 100 tweets each. Topics that are ambiguous (e.q.., Barcelona, which is a city or sport club) or too general (e.q., Paris). The topics in the training and in the test data do not overlap, meaning that test tweets consist of topics that are different from the topics in train dataset. Dataset is consisted of four parts: TRAIN (for training models), DEV (for tuning models), DEVTEST (for development-time evaluation) and TEST (for official evaluation). The first three datasets were annotated using Amazon's Mechanical Turk , while the TEST dataset was annotated on CrowdFlower. 
 
 \section{Related work}
 There are a lot of related work, that also competed in Sentiment Analysis in Twitter.
