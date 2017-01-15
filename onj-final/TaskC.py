@@ -14,29 +14,37 @@ def get_negAndpos(tweets):
     lem_pos = [tweet.lemmatized for tweet in tweets if tweet.sentiment == Tweet.POSITIVE]
     lem_neg = [tweet.lemmatized for tweet in tweets if tweet.sentiment == Tweet.NEGATIVE]
     lem_neu = [tweet.lemmatized for tweet in tweets if tweet.sentiment == Tweet.NEUTRAL]
+    lem_vneg = [tweet.lemmatized for tweet in tweets if tweet.sentiment == Tweet.VERYNEGATIVE]
+    lem_vpos = [tweet.lemmatized for tweet in tweets if tweet.sentiment == Tweet.VERYPOSITIVE]
+
     all_pos = ' '.join([' '.join(x) for x in lem_pos])
     all_neg = ' '.join([' '.join(x)for x in lem_neg])
     all_neutral = ' '.join([' '.join(x) for x in lem_neu])
-    return [all_pos, all_neg, all_neutral]
+    all_vneg = ' '.join([' '.join(x) for x in lem_vneg])
+    all_vpos = ' '.join([' '.join(x) for x in lem_vpos])
+    return [all_pos, all_neg, all_neutral, all_vpos, all_vneg]
 
 def logRegTrainData(tweets):
     train = np.array(tweets)
     nfold = np.split(train, 190)
     pred = np.array([])
-    pred.shape = (0,3)
+    pred.shape = (0,5)
     for i in range(0, len(nfold)):
         all_pos = ""
         all_neg = ""
         all_neutral = ""
-
+        all_vpos = ""
+        all_vneg = ""
         for j in range(0, len(nfold)):
             if i != j:
-                [pos, neg, neu] = get_negAndpos(nfold[j])
+                [pos, neg, neu, vpos, vneg] = get_negAndpos(nfold[j])
                 all_pos += " " + pos
                 all_neg += " " + neg
                 all_neutral += " " + neu
+                all_vpos += " " + vpos
+                all_vneg += " " + vneg
         vect = TfidfVectorizer()
-        tfidf = vect.fit_transform([all_pos, all_neg, all_neutral])
+        tfidf = vect.fit_transform([all_pos, all_neg, all_neutral, vpos, vneg])
         m = vect.transform(Tweet.get_all_messages(nfold[i]))
         pred = np.append(pred, tfidf.A.dot(m.T.A).T, axis=0)
     return pred
@@ -50,11 +58,11 @@ def get_tweets(data_file):
     return tweets
 
 
-trainTweets = get_tweets('data/train-BD.tsv')
-testTweets = get_tweets('data/test-BD.tsv')
+trainTweets = get_tweets('data/train-CE.tsv')
+testTweets = get_tweets('data/test-CE.tsv')
 
 
-topics = np.unique(pd.read_csv('data/test-BD.tsv', sep='\t').as_matrix()[:,1])
+topics = np.unique(pd.read_csv('data/test-CE.tsv', sep='\t').as_matrix()[:,1])
 
 vect = TfidfVectorizer()
 tfidf = vect.fit_transform(get_negAndpos(trainTweets))

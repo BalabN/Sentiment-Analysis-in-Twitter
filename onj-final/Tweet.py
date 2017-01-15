@@ -8,10 +8,12 @@ from nltk.corpus import stopwords, wordnet
 
 
 class Tweet(object):
+    VERYPOSITIVE = 0
     POSITIVE = 1
     NEUTRAL = 2
     NEGATIVE = 3
-    classes = [POSITIVE, NEGATIVE, NEUTRAL]
+    VERYNEGATIVE = 4
+    classes = [POSITIVE, NEGATIVE, NEUTRAL, VERYPOSITIVE, VERYNEGATIVE]
     URL_REGEX = '[hH][tT][tT][pP][sS]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 
     lemmatizer = ""
@@ -27,21 +29,6 @@ class Tweet(object):
     stemmed = []
     english_stops = []
 
-    def __init__(self, tId, sentiment, message):
-        self.lemmatizer = WordNetLemmatizer()
-        self.stemmer = PorterStemmer()
-        self.english_stops = set(stopwords.words('english'))
-
-        self.id = tId
-        self.get_sentiment(sentiment)
-        self.message = message
-        self.message_without_url = self.remove_url()
-        self.message_without_punctuation = self.remove_punctuation()
-        self.create_tokens()
-        self.replace_synonyms()
-        self.lemmatize_tokens()
-        self.stem_tokens()
-
     def __init__(self, tId, topic, sentiment, message):
         self.lemmatizer = WordNetLemmatizer()
         self.stemmer = PorterStemmer()
@@ -56,14 +43,20 @@ class Tweet(object):
         self.replace_synonyms()
         self.lemmatize_tokens()
         self.stem_tokens()
+        self.topic = topic
 
     def get_sentiment(self, sentiment):
-        if sentiment == 'positive':
+        sentiment = str(sentiment)
+        if sentiment == 'positive' or sentiment == '1':
             self.sentiment = self.POSITIVE
-        elif sentiment == 'neutral':
+        elif sentiment == 'neutral' or sentiment == '0':
             self.sentiment = self.NEUTRAL
-        else:
+        elif sentiment == 'negative' or sentiment == '-1':
             self.sentiment = self.NEGATIVE
+        elif sentiment == '-2':
+            self.sentiment = self.VERYNEGATIVE
+        elif sentiment == '2':
+            self.sentiment = self.VERYPOSITIVE
 
     def lemmatize_tokens(self):
         self.lemmatized = [self.lemmatizer.lemmatize(token) for token in self.remove_stopwords()]
@@ -91,15 +84,21 @@ class Tweet(object):
                     self.tokens[i] = synset.lemmas()[0].name()
 
     @staticmethod
-    def get_all_messages(tweets):
+    def get_all_messages(tweets, topic=None):
         messages = []
         for tweet in tweets:
-            messages.append(tweet.message_without_punctuation)
+            if topic == None:
+                messages.append(tweet.message_without_punctuation)
+            if topic != None and topic == tweet.topic:
+                messages.append(tweet.message_without_punctuation)
         return np.array(messages)
 
     @staticmethod
-    def get_all_sentiment(tweets):
+    def get_all_sentiment(tweets, topic=None):
         sentiments = []
         for tweet in tweets:
-            sentiments.append(tweet.sentiment)
+            if topic == None:
+                sentiments.append(tweet.sentiment)
+            if topic != None and topic == tweet.topic:
+                sentiments.append(tweet.sentiment)
         return np.array(sentiments)

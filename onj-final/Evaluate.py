@@ -68,6 +68,7 @@ def evaluateB(res, y):
             else:
                 NN += 1
 
-    e = 0.5*(PP/(PP+NP) + NN/(NN + PN))
+    e = 0.5*(PP/(PP+NP + 0.0000001) + NN/(NN + PN + 0.0000001))
     print(e)
     return e
+
