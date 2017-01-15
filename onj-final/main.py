@@ -87,13 +87,13 @@ def plot_fdist(pos_tok, neg_tok, neu_tok):
     fdist_pos = FreqDist(pos_tok)
     fdist_neg = FreqDist(neg_tok)
     fdist_neu = FreqDist(neu_tok)
-    show_bar_plot([i[0] for i in fdist_all.most_common(10)], [i[1] for i in fdist_all.most_common(10)],
+    show_bar_plot([i[0] for i in fdist_all.most_common(7)], [i[1] for i in fdist_all.most_common(7)],
                   "Frequency distribution of all tweets")
-    show_bar_plot([i[0] for i in fdist_pos.most_common(10)], [i[1] for i in fdist_pos.most_common(10)],
+    show_bar_plot([i[0] for i in fdist_pos.most_common(7)], [i[1] for i in fdist_pos.most_common(7)],
                   "Frequency distribution of positive tweets")
-    show_bar_plot([i[0] for i in fdist_neg.most_common(10)], [i[1] for i in fdist_neg.most_common(10)],
+    show_bar_plot([i[0] for i in fdist_neg.most_common(7)], [i[1] for i in fdist_neg.most_common(7)],
                   "Frequency distribution of negative tweets")
-    show_bar_plot([i[0] for i in fdist_neu.most_common(10)], [i[1] for i in fdist_neu.most_common(10)],
+    show_bar_plot([i[0] for i in fdist_neu.most_common(7)], [i[1] for i in fdist_neu.most_common(7)],
                   "Frequency distribution of neutral tweets")
 
 
@@ -107,14 +107,13 @@ def plot_profanity_words(pos_mes, neg_mes, neu_mes):
     per_neg = sum(cnt_neg.values())
     per_neu = sum(cnt_neu.values())
 
-    cat = ('pos', 'neg', 'neu')
+    cat = ('Positive', 'Negative', 'Neutral')
     performance = [per_pos, per_neg, per_neu]
     show_bar_plot(cat, performance, "Profanity frequency by sentiment")
 
 
 plt.rcdefaults()
 
-print("Tu sam")
 trainTweets = get_tweets('data/train-A.tsv')
 testTweets = get_tweets('data/test-A-full.tsv')
 
