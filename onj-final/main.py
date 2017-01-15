@@ -37,7 +37,7 @@ def logRegTrainData(tweets):
                 all_pos += " " + pos
                 all_neg += " " + neg
                 all_neutral += " " + neu
-        vect = TfidfVectorizer()
+        vect = TfidfVectorizer(ngram_range=(1, 1))
         tfidf = vect.fit_transform([all_pos, all_neg, all_neutral])
         m = vect.transform(Tweet.get_all_messages(nfold[i]))
         pred = np.append(pred, tfidf.A.dot(m.T.A).T, axis=0)
@@ -49,7 +49,7 @@ def get_tweets(data_file):
     tweets = []
     matrix = pd.read_csv(data_file, sep='\t').as_matrix()
     for tweet in matrix:
-        tweets.append(Tweet(tweet[0], tweet[1], tweet[2]))
+        tweets.append(Tweet(tweet[0], "",tweet[1], tweet[2]))
     return tweets
 
 
@@ -57,7 +57,7 @@ trainTweets = get_tweets('data/train-A.tsv')
 testTweets = get_tweets('data/test-A-full.tsv')
 
 
-vect = TfidfVectorizer()
+vect = TfidfVectorizer(ngram_range=(1, 1))
 tfidf = vect.fit_transform(get_negAndpos(trainTweets))
 m = vect.transform(Tweet.get_all_messages(trainTweets))
 # print("TF-IDF vectors (each column is a document):\n{}\nRows:\n{}".format(tfidf.T.A, vect.get_feature_names()))
