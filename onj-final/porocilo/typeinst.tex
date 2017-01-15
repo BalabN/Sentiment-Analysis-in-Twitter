@@ -21,6 +21,8 @@
 \usepackage{amssymb}
 \setcounter{tocdepth}{3}
 \usepackage{graphicx}
+\usepackage{subcaption}
+\graphicspath{ {figures/} }
 
 \usepackage{url}
 \urldef{\mailsa}\path|{alfred.hofmann, ursula.barth, ingrid.haas, frank.holzwarth,|
@@ -83,12 +85,48 @@ The basis of this project was to create a program which can predict the sentimen
 \section{Introduction}
 Social media has greatly democratized content creation. Facebook, Twitter, Skype, Whatsapp and LiveJournal are commonly used to share any thoughts and opinions about anything in the surrounding world. All this content has created new opportunities to study public opinion. Twitter is especially popular for research due to its scale, representative, variety of topics discussed and its ease access to content. In the past years, research in that direction was hindered by the unavailability of suitable datasets and lexicons for system training, development and testing. Some Twitter-specific resources were developed, but they were either small and proprietary, or they relied on noisy labels obtained automatically. This all changed with the shared task on Sentiment Analysis on Twitter, which is part of the international Worksop on Semantic Evaluation. The task is active since 2013 and it attract over 40+ participant teams. It contains 5 subtasks with their train and test datasets. First task is Message Polarity Classification, where we need to classify whether the given message is of positive, negative, or neutral sentiment. In second and third task, there is beside a given message, also a topic and you need to classify the message on two point scale and five-point scale, depending on the task. Forth and fifth task are also on two point and five point scale, where there are given tweets about a given topic, and you need to estimate their distribution.
 
-
-
 \section{Dataset}
  For tasks we are provided with their datasets with annotated tweets. They are gathered in a way, that express sentiment about popular topics. For this purpose, they extracted named entities from millions of tweets. The collected tweets were greatly skewed towards the neutral class. 
  
- To reduce the class imbalance, they removed those that contained no sentiment-bearing words. Tweets are then manually filtered to obtain a set of meaningful topics with at least 100 tweets each. Topics that are ambiguous (e.q.., Barcelona, which is a city or sport club) or too general (e.q., Paris). The topics in the training and in the test data do not overlap, meaning that test tweets consist of topics that are different from the topics in train dataset. Dataset is consisted of four parts: TRAIN (for training models), DEV (for tuning models), DEVTEST (for development-time evaluation) and TEST (for official evaluation). The first three datasets were annotated using Amazon's Mechanical Turk , while the TEST dataset was annotated on CrowdFlower. 
+ To reduce the class imbalance, they removed those that contained no sentiment-bearing words. Tweets are then manually filtered to obtain a set of meaningful topics with at least 100 tweets each. Topics that are ambiguous (e.q.., Barcelona, which is a city or sport club) or too general (e.q., Paris). The topics in the training and in the test data do not overlap, meaning that test tweets consist of topics that are different from the topics in train dataset. Dataset is consisted of four parts: TRAIN (for training models), DEV (for tuning models), DEVTEST (for development-time evaluation) and TEST (for official evaluation). The first three datasets were annotated using Amazon's Mechanical Turk , while the TEST dataset was annotated on CrowdFlower.
+ 
+\section{Data Pre-Processing}
+First we tokenized and lemmatised the data and calculated frequency distributions of all data and divided data by sentiment. (\emph{See Fig.3 for most common words}). As we can see most frequent words and distribution is the same across all dataset because they have the same topic.
+
+\begin{figure}[h]
+ 
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=0.9\linewidth, height=5cm]{figure_fdist_all.png} 
+\caption{Frequency distribution of all tweets}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=0.9\linewidth, height=5cm]{figure_fdist_pos.png}
+\caption{Frequency distribution of positive tweets}
+\end{subfigure}
+
+\end{figure}
+\begin{figure}[h]
+
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=0.9\linewidth, height=5cm]{figure_fdist_neg.png} 
+\caption{Frequency distribution of negative tweets}
+\end{subfigure}
+\begin{subfigure}{0.5\textwidth}
+\includegraphics[width=0.9\linewidth, height=5cm]{figure_fdist_neu.png}
+\caption{Frequency distribution of neutral tweets}
+\end{subfigure}
+ 
+\caption{Frequency distribution in data divided by sentiment}
+\label{fig:image2}
+\end{figure}
+
+Then we filtered the profanity words to see if they have any impact on sentiment of a Tweeter message. \emph{Fig.4} shows the frequency of profanity words by sentiment of Tweeter messages.
+
+\begin{figure}
+\centerline{\includegraphics[scale=0.35]{figure_fdist_sentiment.png}}
+\caption{Frequency distribution of profanity words across Tweeter messages by sentiment}
+\label{fig:Image4}
+\end{figure}
 
 \section{Related work}
 There are a lot of related work, that also competed in Sentiment Analysis in Twitter.
