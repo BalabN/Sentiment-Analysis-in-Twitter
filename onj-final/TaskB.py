@@ -64,6 +64,7 @@ eval_acc = []
 for topic in topics:
     weights = vect.transform(Tweet.get_all_messages(testTweets, topic))
 
+<<<<<<< HEAD
     res = [Tweet.classes[x] for x in np.argmax(tfidf.A.dot(weights.T.A), axis=0)]
     print("klasifikacijska tocnost " + str(
         np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets, topic))]) / len(res)))
@@ -72,3 +73,9 @@ for topic in topics:
     eval_acc += [np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets, topic))]) / len(res)]
 print("Evaluation " + str(np.average(eval_res)))
 print("Evaluation Acc" + str(np.average(eval_acc)))
+=======
+res = [Tweet.sentiments[x] for x in np.argmax(tfidf.A.dot(weights.T.A), axis=0)]
+print("klasifikacijska tocnost " + str(
+    np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets))]) / len(res)))
+print(Evaluate.evaluateB(res, Tweet.get_all_sentiment(testTweets)))
+>>>>>>> 213dffe6e904dc2c7dfc4d84d6912f4c19ab7971
