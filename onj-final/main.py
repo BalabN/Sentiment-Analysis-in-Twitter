@@ -107,14 +107,13 @@ def plot_profanity_words(pos_mes, neg_mes, neu_mes):
     per_neg = sum(cnt_neg.values())
     per_neu = sum(cnt_neu.values())
 
-    cat = ('pos', 'neg', 'neu')
+    cat = ('Positive', 'Negative', 'Neutral')
     performance = [per_pos, per_neg, per_neu]
     show_bar_plot(cat, performance, "Profanity frequency by sentiment")
 
 
 plt.rcdefaults()
 
-print("Tu sam")
 trainTweets = get_tweets('data/train-A.tsv')
 testTweets = get_tweets('data/test-A-full.tsv')
 
