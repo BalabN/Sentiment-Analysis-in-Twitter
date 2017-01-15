@@ -1,3 +1,7 @@
+import numpy as np
+from Tweet import Tweet
+
+
 def evaluateA(res, y):
     PP = 0
     PU = 0
@@ -65,3 +69,15 @@ def evaluateB(res, y):
     e = 0.5 * (PP / (PP + NP + 0.00000001) + NN / (NN + PN + 0.00000001))
     print(e)
     return e
+
+def evaluateC(res, y):
+    s = []
+    for c in Tweet.sentiments:
+        r = []
+        for i in range(0, len(res)):
+            if y[i] == c:
+                r += [np.abs(res[i] - y[i])]
+        if len(r) != 0:
+            s+= [np.sum(r)/len(r)]
+    print(np.sum(s)/len(Tweet.sentiments))
+    return np.sum(s)/len(Tweet.sentiments)
