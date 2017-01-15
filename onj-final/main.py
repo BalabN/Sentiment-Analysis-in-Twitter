@@ -15,12 +15,13 @@ import Evaluate
 
 
 def get_neg_and_pos_lem(tweets):
-    lem_pos = [tweet.lemmatized for tweet in tweets if tweet.sentiment == Tweet.POSITIVE]
-    lem_neg = [tweet.lemmatized for tweet in tweets if tweet.sentiment == Tweet.NEGATIVE]
-    lem_neu = [tweet.lemmatized for tweet in tweets if tweet.sentiment == Tweet.NEUTRAL]
-    all_pos = ' '.join([' '.join(x) for x in lem_pos])
-    all_neg = ' '.join([' '.join(x) for x in lem_neg])
-    all_neutral = ' '.join([' '.join(x) for x in lem_neu])
+    lem_pos = Tweet.get_all_messages_sentiment(tweets,Tweet.POSITIVE)
+    lem_neg = Tweet.get_all_messages_sentiment(tweets,Tweet.NEGATIVE)
+    lem_neu = Tweet.get_all_messages_sentiment(tweets,Tweet.NEUTRAL)
+
+    all_pos = ' '.join(lem_pos)
+    all_neg = ' '.join(lem_neg)
+    all_neutral = ' '.join(lem_neu)
     return [[all_pos, all_neg, all_neutral], [lem_pos, lem_neg, lem_neu]]
 
 
@@ -42,10 +43,7 @@ def log_reg_train_data(tweets):
     nfold = np.split(train, x)
     pred = np.array([])
     pred.shape = (0, 3)
-    vect = TfidfVectorizer(max_df=0.8,
-                           max_features=20000,
-                           min_df=0.2,
-                           use_idf=True)
+    vectorizer = TfidfVectorizer()
     for i in range(0, len(nfold)):
         all_pos = ""
         all_neg = ""
@@ -57,7 +55,6 @@ def log_reg_train_data(tweets):
                 all_pos += " " + pos
                 all_neg += " " + neg
                 all_neutral += " " + neu
-        vectorizer = TfidfVectorizer(ngram_range=(1, 1))
         tfidf = vectorizer.fit_transform([all_pos, all_neg, all_neutral])
         m = vectorizer.transform(Tweet.get_all_messages(nfold[i]))
         pred = np.append(pred, tfidf.A.dot(m.T.A).T, axis=0)
@@ -117,16 +114,16 @@ plt.rcdefaults()
 trainTweets = get_tweets('data/train-A.tsv')
 testTweets = get_tweets('data/test-A-full.tsv')
 
-vect = TfidfVectorizer(ngram_range=(1, 1))
+vect = TfidfVectorizer()
 [[posLem, negLem, neuLem], [pos_tokens, neg_tokens, neu_tokens]] = get_neg_and_pos_lem(trainTweets)
-[posMes, negMes, neuMes] = get_neg_and_pos_message(trainTweets)
+#[posMes, negMes, neuMes] = get_neg_and_pos_message(trainTweets)
 
-pos_list = [item for sublist in pos_tokens for item in sublist]
-neg_list = [item for sublist in neg_tokens for item in sublist]
-neu_list = [item for sublist in neu_tokens for item in sublist]
-print(pos_list)
-plot_fdist(pos_list, neg_list, neu_list)
-plot_profanity_words(posMes, negMes, neuMes)
+#pos_list = [item for sublist in pos_tokens for item in sublist]
+#neg_list = [item for sublist in neg_tokens for item in sublist]
+#neu_list = [item for sublist in neu_tokens for item in sublist]
+#print(pos_list)
+#plot_fdist(pos_list, neg_list, neu_list)
+#plot_profanity_words(posMes, negMes, neuMes)
 
 tfidf = vect.fit_transform([posLem, negLem, neuLem])
 m = vect.transform(Tweet.get_all_messages(trainTweets))
