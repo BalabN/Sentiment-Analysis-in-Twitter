@@ -73,7 +73,7 @@
 
 \begin{abstract}
 The basis of this project was to create a program which can predict the sentiment of a message posted on Tweeter by using common NLP tools and techniques. Idea was to see the impact of word frequency, emoticons and other word sentiment to sentiment of the whole message. We first processed text with lemmatisation and tried three techniques on that data. The outcomes were very different but we could see that with small changes in data processing we get significant improvements.
-\keywords{NLP, classification, SemEval 2017, sentiment analysis, logistic regression, Naive Bayes , TD-IDFT}
+\keywords{NLP, classification, SemEval 2017, sentiment analysis, random forest classifier , TD-IDFT}
 \end{abstract}
 
 
@@ -138,7 +138,7 @@ There are a lot of related work, that also competed in Sentiment Analysis in Twi
 
 In work~\cite{briones2016vcu} they have used simple unigram model baseline with three main features enchantments incorporated into the model. This features are emoticon retention, word stemming and token saliency calculation. This work is similar to ours, since they also uses TF-IDF to calculate similarities between tweets. They preprocessed text with word stemming, while we used lemmatizing. With stemming or lemmatizing, the emoticons get lost. In order to preserve emoticons, they have extracted it before stemming and use them as features. They also used unigrams to achieve better results. We didn't used them because we got worst performance.
 
-\subsection{Evaluation and discussion}
+\section{Evaluation and discussion}
 
 
 \subsection{Subtask A: Message polarity classification}
@@ -174,6 +174,13 @@ where $PP$, $UP$, $NP$, $PU$, $PN$ are the cells of the confusion matrix shown i
     \hline
   \end{tabular}
 \end{center}
+
+First we divided our tweet messages in three documents, positive, negative and neutral document. Evaluated TF-IDF on training documents and used it on test data. We got accuracy of 38.98 \% and
+\begin{equation}
+F^{PN}_1 = 0.35
+\end{equation}
+
+Second we used random forest classifier and used our TF-IDF weights on it. The result may vary but the end accuracy is 
 
 \subsection{Subtask B: Tweet classification according to a two-point scale}
 For subtask B each tweet must be classified as either positive or negative. For this subtask they have adopted macro-averaged recall: 
@@ -225,7 +232,7 @@ This is also a measure of error, therefore lower values are better.$EMD$ is comp
 
 
 \section{Conclusion}
-That is it
+Extracting sentiment from messages to get context of a message is one of the greatest tasks of Natural Language Processing. We have shown here that with data that we have at our disposal and tools which are evolving every day, we can easily start getting results from NLP methods for sentiment extraction. We got fairly good results which lead us to other ideas for improving the sentiment extraction. As we saw we could modify TF-IDF weights with some custom sentiment gains like emoticons and profanity words. With adding custom labels like this and improving the accuracy we could start monitoring trends on Twitter and learning to predict the atmosphere around public figures and companies on Tweeter. Further work can be made in understanding irony and jokes which were not taken in consideration.
 
 
 
