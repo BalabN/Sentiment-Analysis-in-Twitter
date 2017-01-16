@@ -23,6 +23,7 @@
 \usepackage{graphicx}
 \usepackage{subfig}
 \graphicspath{ {figures/} }
+\usepackage{etoolbox}%
 
 \usepackage{url}
 \urldef{\mailsa}\path|{alfred.hofmann, ursula.barth, ingrid.haas, frank.holzwarth,|
@@ -55,8 +56,9 @@
 
 % the affiliations are given next; don't give your e-mail address
 % unless you accept that it will be published
+
 \institute{Faculty of Computer and Information Science, University of Ljubljana.\\
- Večna pot 113, 1001 Ljubljana, Slovenia\\
+ Ve\v{c}na pot 113, 1001 Ljubljana, Slovenia\\
 \url{http://www.fri.uni-lj.si/}}
 
 %
@@ -73,17 +75,19 @@
 
 \begin{abstract}
 The basis of this project was to create a program which can predict the sentiment of a message posted on Tweeter by using common NLP tools and techniques. Idea was to see the impact of word frequency, emoticons and other word sentiment to sentiment of the whole message. We first processed text with lemmatisation and tried three techniques on that data. The outcomes were very different but we could see that with small changes in data processing we get significant improvements.
+
 \keywords{NLP, classification, SemEval 2017, sentiment analysis, random forest classifier , TD-IDFT}
+
 \end{abstract}
 
 
 \section{Introduction}
-Social media has greatly democratized content creation. Facebook, Twitter, Skype, Whatsapp and LiveJournal are commonly used to share any thoughts and opinions about anything in the surrounding world. All this content has created new opportunities to study public opinion. Twitter is especially popular for research due to its scale, representative, variety of topics discussed and its ease access to content. In the past years, research in that direction was hindered by the unavailability of suitable datasets and lexicons for system training, development and testing. Some Twitter-specific resources were developed, but they were either small and proprietary, or they relied on noisy labels obtained automatically. This all changed with the shared task on Sentiment Analysis on Twitter, which is part of the international Worksop on Semantic Evaluation. The task is active since 2013 and it attract over 40+ participant teams. It contains 5 subtasks with their train and test datasets. First task is Message Polarity Classification, where we need to classify whether the given message is of positive, negative, or neutral sentiment. In second and third task, there is beside a given message, also a topic and you need to classify the message on two point scale and five-point scale, depending on the task. Forth and fifth task are also on two point and five point scale, where there are given tweets about a given topic, and you need to estimate their distribution.
+Social media has greatly democratized content creation. Facebook, Twitter, Skype, Whatsapp and LiveJournal are commonly used to share any thoughts and opinions about anything in the surrounding world. All this content has created new opportunities to study public opinion. Twitter is especially popular for research due to its scale, representative, variety of topics discussed and its ease access to content. In the past years, research in that direction was hindered by the unavailability of suitable datasets and lexicons for system training, development and testing. Some Twitter-specific resources were developed, but they were either small and proprietary, or they relied on noisy labels obtained automatically. This all changed with the shared task on Sentiment Analysis on Twitter, which is part of the international Worksop on Semantic Evaluation. The task is active since 2013 and it attract over 40+ participant teams. It contains 5 subtasks with their train and test datasets. First task is Message Polarity Classification, where we need to classify whether the given message is of positive, negative, or neutral sentiment. In second and third task, there is beside a given message, also a topic and you need to classify the message on two point scale and five-point scale, depending on the task. Forth and fifth task are also on two point and five point scale, where there are given tweets about a given topic, and you need to estimate their distribution~\cite{semeval}.
 
 \section{Dataset}
  For tasks we are provided with their datasets with annotated tweets. They are gathered in a way, that express sentiment about popular topics. For this purpose, they extracted named entities from millions of tweets. The collected tweets were greatly skewed towards the neutral class. 
  
- To reduce the class imbalance, they removed those that contained no sentiment-bearing words. Tweets are then manually filtered to obtain a set of meaningful topics with at least 100 tweets each. Topics that are ambiguous (e.q.., Barcelona, which is a city or sport club) or too general (e.q., Paris). The topics in the training and in the test data do not overlap, meaning that test tweets consist of topics that are different from the topics in train dataset. Dataset is consisted of four parts: TRAIN (for training models), DEV (for tuning models), DEVTEST (for development-time evaluation) and TEST (for official evaluation). The first three datasets were annotated using Amazon's Mechanical Turk , while the TEST dataset was annotated on CrowdFlower.
+ To reduce the class imbalance, they removed those that contained no sentiment-bearing words. Tweets are then manually filtered to obtain a set of meaningful topics with at least 100 tweets each. Topics that are ambiguous (e.q.., Barcelona, which is a city or sport club) or too general (e.q., Paris). The topics in the training and in the test data do not overlap, meaning that test tweets consist of topics that are different from the topics in train dataset. Dataset is consisted of four parts: TRAIN (for training models), DEV (for tuning models), DEVTEST (for development-time evaluation) and TEST (for official evaluation). The first three datasets were annotated using Amazon's Mechanical Turk , while the TEST dataset was annotated on CrowdFlower~\cite{semeval}.
  
 \section{Data Pre-Processing}
 First we tokenized and lemmatised the data and calculated frequency distributions of all data and divided data by sentiment. (\emph{See Fig.1 for most common words}).
@@ -138,8 +142,12 @@ There are a lot of related work, that also competed in Sentiment Analysis in Twi
 
 In work~\cite{briones2016vcu} they have used simple unigram model baseline with three main features enchantments incorporated into the model. This features are emoticon retention, word stemming and token saliency calculation. This work is similar to ours, since they also uses TF-IDF to calculate similarities between tweets. They preprocessed text with word stemming, while we used lemmatizing. With stemming or lemmatizing, the emoticons get lost. In order to preserve emoticons, they have extracted it before stemming and use them as features. They also used unigrams to achieve better results. We didn't used them because we got worst performance.
 
+
+\section{Methods}
+
 \section{Evaluation and discussion}
 
+We will briefly describe evaluation method for each individual subtasks that are also described in paper~\cite{nakov2016semeval} and also our results from our implemented methods.
 
 \subsection{Subtask A: Message polarity classification}
 Subtask A is a single-label multi-class(SLMC) classification task. Each tweet must be classified as positive, neutral or negative. The evaluation score is measured as $F^{PN}_1$:
@@ -192,10 +200,11 @@ For subtask B each tweet must be classified as either positive or negative. For 
 \varphi^{PN} = \frac{1}{2}(\varphi^P + \varphi^N) \\
 = \frac{1}{2}(\frac{PP}{PP + NP} + \frac{NN}{NN + PN})
 \end{equation}
-$\varphi^{PN}$ ranges from 0 to 1, where a value of 1 is the best score, while 0 means that classifier misclassified all items. This method is better than classic accuracy because its more robust to class invariance. 
+$\varphi^{PN}$ ranges from 0 to 1, where a value of 1 is the best score, while 0 means that classifier misclassified all items. This method is better than classic accuracy because its more robust to class invariance. The evaluation for subtask B is evaluated independently for each topic. The results are then averaged across topics to yield the final score.
 
-The evaluation for subtask B is evaluated independently for each topic. The results are then averaged across topics to yield the final score.
+Our results were 0.536 with $\varphi^{PN}$ equation, with baseline score 0.500. We can conclude that our method is performing better than a naive classifier. If we were competing in 2016, we would get in 17th place out of 20 teams.
 
+Our results were 0.350 with $F^{PN}_1$ equation. We have reached the baseline score, which is 0.255, and we can conclude that our method is working. If we were competing in 2016, we would get in 32nd place out of 35 teams. We tried to improve our results with random forest classifier, but we have achieved worst results, which are 0.263, but still better than baseline score. 
 
 \subsection{Subtask C: Tweet classification according to a five-point scale}
 
@@ -206,7 +215,7 @@ MAE^M(h, Te) = \frac{1}{|C|}\sum_{j=1}^{|C|}\frac{1}{|Te_j|}\sum_{x_i\in Te_j}|h
 \end{equation}
 where $y_i$ denotes the true label of item $x_i$ and $h(x_i)$ is its predicted value. $Te_j$ denotes the set of test document whose true class is $c_j$ and $|h(x_i) - y_i|$ denotes the distance between classes $h(x_i)$ and $y_i$. The advantage of $MAE^M$ over standard $MAE$ is that it is robust to class imbalance. Unlike the previous mentioned methods, the lower the score value is, the better results are. 
 
-
+Our results with $MAE^M(h, Te)$ equation were 0.985 with a baseline score 1.200 where lower number is better. This was our most successful method and we would achieve 6th place out of 12 teams.
 
 \subsection{Subtask D: Tweet quantification according to a two point scale}
 
@@ -215,7 +224,7 @@ Subtask D assumes a binary quantification setup, in which each tweet is classifi
 \begin{equation}
 KLD(q, p, C) = \sum_{c_j \in C}p(c_j)\log_e\frac{p(c_j)}{q(c_j)}
 \end{equation}
-$KLD$ is a measure of the error made in estimating a true distribution $p$ over set of classes ($C$) by means of a predicted distribution $q$. $KLD$ ranges between 0 and $+\inf$, where lower value is better. $KLD$ is computed individually for each topic, and results are averaged to yield the final score.
+$KLD$ is a measure of the error made in estimating a true distribution $p$ over set of classes ($C$) by means of a predicted distribution $q$. $KLD$ ranges between 0 and $+\inf$, where lower value is better. $KLD$ is computed individually for each topic, and results are averaged to yield the final score. We didn't participate in this task.
 
 \subsection{Subtask E: Tweet quantification according to a five-point scale}
 
@@ -225,62 +234,23 @@ Subtask E is an ordinal quantification (OQ) task, in which each tweet belongs ex
 EMD(q, p) = \sum_{j=1}^{|C| - 1}|\sum_{i=1}^jq(c_i) - \sum_{i=1}^jp(c_i)|
 \end{equation}
 
-This is also a measure of error, therefore lower values are better.$EMD$ is computed individually for each topic, and results are then averaged across all topics to yield the final score.
-\begin{figure}
-\centering
-\includegraphics[height=6.2cm]{eijkel2}
-\caption{}
-\label{fig:example}
-\end{figure}
-
+This is also a measure of error, therefore lower values are better.$EMD$ is computed individually for each topic, and results are then averaged across all topics to yield the final score. We didn't participate in this task.
 
 \section{Conclusion}
 Extracting sentiment from messages to get context of a message is one of the greatest tasks of Natural Language Processing. We have shown here that with data that we have at our disposal and tools which are evolving every day, we can easily start getting results from NLP methods for sentiment extraction. We got fairly good results which lead us to other ideas for improving the sentiment extraction. As we saw we could modify TF-IDF weights with some custom sentiment gains like emoticons and profanity words. With adding custom labels like this and improving the accuracy we could start monitoring trends on Twitter and learning to predict the atmosphere around public figures and companies on Tweeter. Further work can be made in understanding irony and jokes which were not taken in consideration.
 
+\bibliographystyle{IEEEtran}
+\AtEndEnvironment{thebibliography}{
+
+\bibitem{semeval} 
+
+SemEval-2017 Task 4: Sentiment Analysis in Twitter,
+\\\texttt{http://alt.qcri.org/semeval2017/task4/}
 
 
-
-
-
-\begin{thebibliography}{4}
-
-\bibitem{jour} Smith, T.F., Waterman, M.S.: Identification of Common Molecular
-Subsequences. J. Mol. Biol. 147, 195--197 (1981)
-
-\bibitem{lncschap} May, P., Ehrlich, H.C., Steinke, T.: ZIB Structure Prediction Pipeline:
-Composing a Complex Biological Workflow through Web Services. In: Nagel,
-W.E., Walter, W.V., Lehner, W. (eds.) Euro-Par 2006. LNCS, vol. 4128,
-pp. 1148--1158. Springer, Heidelberg (2006)
-
-\bibitem{book} Foster, I., Kesselman, C.: The Grid: Blueprint for a New Computing
-Infrastructure. Morgan Kaufmann, San Francisco (1999)
-
-\bibitem{proceeding1} Czajkowski, K., Fitzgerald, S., Foster, I., Kesselman, C.: Grid
-Information Services for Distributed Resource Sharing. In: 10th IEEE
-International Symposium on High Performance Distributed Computing, pp.
-181--184. IEEE Press, New York (2001)
-
-\bibitem{proceeding2} Foster, I., Kesselman, C., Nick, J., Tuecke, S.: The Physiology of the
-Grid: an Open Grid Services Architecture for Distributed Systems
-Integration. Technical report, Global Grid Forum (2002)
-
-\bibitem{url} National Center for Biotechnology Information, \url{http://www.ncbi.nlm.nih.gov}
-
-\end{thebibliography}
-
-@inproceedings{vilaresa2016lys,
-  title={LYS at SemEval-2016 Task 4: Exploiting neural activation values for Twitter sentiment classification and quantification},
-  author={Vilaresa, David and Dovala, Yerai and Alonsoa, Miguel A and G{\'o}mez-Rodr{\i}gueza, Carlos},
-  booktitle={Proceedings of the 10th International Workshop on Semantic Evaluation (SemEval 2016), San Diego, US},
-  year={2016}
 }
 
-@article{briones2016vcu,
-  title={VCU-TSA at Semeval-2016 Task 4: Sentiment Analysis in Twitter},
-  author={Briones, Gerard and Amarasinghe, Kasun and McInnes, Bridget T},
-  journal={Proceedings of SemEval},
-  pages={215--219},
-  year={2016}
-}
+\bibliography{bibliography}
+
 
 \end{document}
