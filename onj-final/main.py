@@ -15,9 +15,9 @@ import Evaluate
 
 
 def get_neg_and_pos_lem(tweets):
-    lem_pos = Tweet.get_all_messages_sentiment(tweets,Tweet.POSITIVE)
-    lem_neg = Tweet.get_all_messages_sentiment(tweets,Tweet.NEGATIVE)
-    lem_neu = Tweet.get_all_messages_sentiment(tweets,Tweet.NEUTRAL)
+    lem_pos = Tweet.get_all_messages_sentiment(tweets, Tweet.POSITIVE)
+    lem_neg = Tweet.get_all_messages_sentiment(tweets, Tweet.NEGATIVE)
+    lem_neu = Tweet.get_all_messages_sentiment(tweets, Tweet.NEUTRAL)
 
     all_pos = ' '.join(lem_pos)
     all_neg = ' '.join(lem_neg)
@@ -43,7 +43,8 @@ def log_reg_train_data(tweets):
     nfold = np.split(train, x)
     pred = np.array([])
     pred.shape = (0, 3)
-    vectorizer = TfidfVectorizer()
+    vectorizer = TfidfVectorizer(max_df=0.8,
+                                 min_df=0.2)
     for i in range(0, len(nfold)):
         all_pos = ""
         all_neg = ""
@@ -114,29 +115,24 @@ plt.rcdefaults()
 trainTweets = get_tweets('data/train-A.tsv')
 testTweets = get_tweets('data/test-A-full.tsv')
 
-vect = TfidfVectorizer()
+vect = TfidfVectorizer(TfidfVectorizer(max_df=0.8,
+                                       min_df=0.2))
 [[posLem, negLem, neuLem], [pos_tokens, neg_tokens, neu_tokens]] = get_neg_and_pos_lem(trainTweets)
-#[posMes, negMes, neuMes] = get_neg_and_pos_message(trainTweets)
+# [posMes, negMes, neuMes] = get_neg_and_pos_message(trainTweets)
 
-#pos_list = [item for sublist in pos_tokens for item in sublist]
-#neg_list = [item for sublist in neg_tokens for item in sublist]
-#neu_list = [item for sublist in neu_tokens for item in sublist]
-#print(pos_list)
-#plot_fdist(pos_list, neg_list, neu_list)
-#plot_profanity_words(posMes, negMes, neuMes)
+# pos_list = [item for sublist in pos_tokens for item in sublist]
+# neg_list = [item for sublist in neg_tokens for item in sublist]
+# neu_list = [item for sublist in neu_tokens for item in sublist]
+# print(pos_list)
+# plot_fdist(pos_list, neg_list, neu_list)
+# plot_profanity_words(posMes, negMes, neuMes)
 
 tfidf = vect.fit_transform([posLem, negLem, neuLem])
 m = vect.transform(Tweet.get_all_messages(trainTweets))
-print("TF-IDF vectors (each column is a document):\n{}\nRows:\n{}".format(tfidf.T.A, vect.get_feature_names()))
-# classifier = nltk.NaiveBayesClassifier.train(tfidf)
-# print("Naive acc:", (nltk.classify.accuracy(classifier, m)) * 100)
-#
-# classifier.show_most_informative_features(4)
 
 weights = vect.transform(Tweet.get_all_messages(testTweets))
 
 res = [Tweet.sentiments[x] for x in np.argmax(tfidf.A.dot(weights.T.A), axis=0)]
-print(np.argmax([1, 2, 3, 2, 11], axis=0))
 print("Klasifikacijska tocnost: " + str(
     np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets))]) / len(res)))
 print(Evaluate.evaluateA(res, Tweet.get_all_sentiment(testTweets)))
