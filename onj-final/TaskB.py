@@ -1,11 +1,8 @@
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-
 from Tweet import Tweet
 import Evaluate
-
-
 
 
 def get_negAndpos(tweets):
@@ -14,7 +11,6 @@ def get_negAndpos(tweets):
     all_pos = ' '.join(lem_pos)
     all_neg = ' '.join(lem_neg)
     return [all_pos, all_neg]
-
 
 
 def get_tweets(data_file):
@@ -28,8 +24,7 @@ def get_tweets(data_file):
 trainTweets = get_tweets('data/train-BD.tsv')
 testTweets = get_tweets('data/test-BD.tsv')
 
-
-topics = np.unique(pd.read_csv('data/test-BD.tsv', sep='\t').as_matrix()[:,1])
+topics = np.unique(pd.read_csv('data/test-BD.tsv', sep='\t').as_matrix()[:, 1])
 
 vect = TfidfVectorizer()
 tfidf = vect.fit_transform(get_negAndpos(trainTweets))
@@ -43,13 +38,9 @@ for topic in topics:
 
     weights = vect.transform(Tweet.get_all_messages(testTweets, topic))
     res = [Tweet.sentiments[x] for x in np.argmax(tfidf.A.dot(weights.T.A) * pred_all, axis=0)]
-    print("klasifikacijska tocnost " + str(
-        np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets, topic))]) / len(res)))
-    print(Evaluate.evaluateB(res, Tweet.get_all_sentiment(testTweets, topic)))
+
     eval_res += [Evaluate.evaluateB(res, Tweet.get_all_sentiment(testTweets, topic))]
-    eval_acc += [np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets, topic))]) / len(res)]
+    eval_acc += [
+        np.sum([1 if x == y else 0 for x, y in zip(res, Tweet.get_all_sentiment(testTweets, topic))]) / len(res)]
 print("Evaluation " + str(np.average(eval_res)))
 print("Evaluation Acc" + str(np.average(eval_acc)))
-
-
-

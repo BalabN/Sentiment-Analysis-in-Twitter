@@ -1,11 +1,7 @@
-from sklearn import linear_model
-
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-
 from Tweet import Tweet
-from sklearn.ensemble import RandomForestClassifier
 import Evaluate
 
 

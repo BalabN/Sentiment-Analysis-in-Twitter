@@ -1,4 +1,3 @@
-import nltk
 from nltk import FreqDist
 
 import matplotlib.pyplot as plt
