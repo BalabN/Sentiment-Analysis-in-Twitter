@@ -145,6 +145,12 @@ In work~\cite{briones2016vcu} they have used simple unigram model baseline with 
 
 \section{Methods}
 
+\subsection{Subtask A}
+
+For message polarity extraction first we divided our tweet messages in three documents, positive, negative and neutral document. Evaluated TF-IDF on training documents and used it on test data and multiply it with class weight. For second method we used random forest classifier and used our TF-IDF weights on it.
+
+Difference between two approaches are that the first approach uses only the similarity of documents and second one uses the random forest classifier which had worse results but has more options for data scaling.
+
 \subsection{Subtask B and Subtask C}
 For this tasks we have created a method, that first preprocess all train tweets and then sums all the tweets according to their belonging sentiment. With this approach we get two documents, one containing all the text for positive tweets and second containing all the text for negative tweets. We calculate tf-idf for each document. 
 
@@ -190,12 +196,12 @@ where $PP$, $UP$, $NP$, $PU$, $PN$ are the cells of the confusion matrix shown i
   \end{tabular}
 \end{center}
 
-First we divided our tweet messages in three documents, positive, negative and neutral document. Evaluated TF-IDF on training documents and used it on test data. We got accuracy of 38.98 \% and
+For TF-IDF we got accuracy of 38.98 \% and
 \begin{equation}
 F^{PN}_1 = 0.35
 \end{equation}
 
-Second we used random forest classifier and used our TF-IDF weights on it. The result may vary but the end accuracy is 33.95 \% and
+For random forest classifier the result may vary but the end accuracy is 33.95 \% and
 \begin{equation}
 F^{PN}_1 = 0.26
 \end{equation}
